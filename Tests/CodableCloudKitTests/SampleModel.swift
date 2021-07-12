@@ -12,4 +12,5 @@ import Foundation
 struct SampleModel: CloudKitCodable {
     var metadata: CloudKitMetadata
     let text: String
+    let date: Date
 }

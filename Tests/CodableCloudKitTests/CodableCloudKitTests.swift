@@ -12,6 +12,7 @@ final class CodableCloudKitTests: XCTestCase {
 
         let record = CKRecord.init(recordType: "Sample")
         record.setObject("sample text" as NSString, forKey: "text")
+        record.setObject(Date() as NSDate, forKey: "date")
 
         do {
             let model = try decoder.decode(SampleModel.self, from: record)
