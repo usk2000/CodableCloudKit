@@ -12,16 +12,24 @@ public protocol CloudKitRecordRepresentable {
 }
 
 public struct CloudKitMetadata: Codable {
-    var data: String  //base64 encoded
-    var type: String
-    var identifier: String
-    var created: CloudKitMetadataDate?
-    var modified: CloudKitMetadataDate?
+    public var data: String  //base64 encoded
+    public var type: String
+    public var identifier: String
+    public var created: CloudKitMetadataDate?
+    public var modified: CloudKitMetadataDate?
+}
+
+extension CloudKitMetadata {
+    
+    public static func empty() -> CloudKitMetadata {
+        return .init(data: "", type: "", identifier: "", created: nil, modified: nil)
+    }
+    
 }
 
 public struct CloudKitMetadataDate: Codable {
-    var date: Date
-    var user: String
+    public var date: Date
+    public var user: String
 }
 
 public protocol CloudKitRecordDecodable: CloudKitRecordRepresentable & Decodable {

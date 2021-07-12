@@ -43,6 +43,30 @@ final public class CloudKitRecordEncoder: JSONEncoder {
         return record
 
     }
+    
+    public func encodeToValues<T>(_ value: T) throws -> [String: Any]
+    where T: CloudKitRecordEncodable {
+        let data = try self.encode(value)
+        var values =
+            try JSONSerialization.jsonObject(with: data, options: [.allowFragments])
+            as? [String: Any] ?? [:]
+        values.removeValue(forKey: "metadata")
+        return values
+    }
+    
+    public func encodeAndApplyToRecord<T>(_ value: T, record: CKRecord) throws where T: CloudKitRecordEncodable {
+        
+        let values = try encodeToValues(value)
+        values.forEach { body in
+            if let value = body.value as? __CKRecordObjCValue {
+                record.setObject(value, forKey: body.key)
+            } else {
+                debugPrint("invalid value : \(body.value)")
+            }
+        }
+        
+    }
+    
     public override init() {}
 
 }
