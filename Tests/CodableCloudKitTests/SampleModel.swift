@@ -1,6 +1,6 @@
 //
 //  SampleModel.swift
-//  
+//
 //
 //  Created by Yusuke Hasegawa on 2021/07/12.
 //

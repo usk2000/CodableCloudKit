@@ -12,10 +12,9 @@ let package = Package(
     products: [
         .library(
             name: "CodableCloudKit",
-            targets: ["CodableCloudKit"]),
+            targets: ["CodableCloudKit"])
     ],
-    dependencies: [
-    ],
+    dependencies: [],
     targets: [
         .target(
             name: "CodableCloudKit",

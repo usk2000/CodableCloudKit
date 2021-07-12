@@ -1,6 +1,6 @@
 //
 //  CloudKitCodable.swift
-//  
+//
 //
 //  Created by Yusuke Hasegawa on 2021/07/12.
 //
@@ -12,7 +12,7 @@ public protocol CloudKitRecordRepresentable {
 }
 
 public struct CloudKitMetadata: Codable {
-    var data: String //base64 encoded
+    var data: String  //base64 encoded
     var type: String
     var identifier: String
     var created: CloudKitMetadataDate?
@@ -25,13 +25,13 @@ public struct CloudKitMetadataDate: Codable {
 }
 
 public protocol CloudKitRecordDecodable: CloudKitRecordRepresentable & Decodable {
-    
+
 }
 
 public protocol CloudKitRecordEncodable: CloudKitRecordRepresentable & Encodable {
-    
+
 }
 
 public protocol CloudKitCodable: CloudKitRecordDecodable & CloudKitRecordEncodable {
-    
+
 }
