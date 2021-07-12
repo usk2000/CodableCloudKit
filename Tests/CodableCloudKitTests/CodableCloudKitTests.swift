@@ -1,11 +1,11 @@
-    import XCTest
-    @testable import CodableCloudKit
 
-    final class CodableCloudKitTests: XCTestCase {
-        func testExample() {
-            // This is an example of a functional test case.
-            // Use XCTAssert and related functions to verify your tests produce the correct
-            // results.
-            XCTAssertEqual(CodableCloudKit().text, "Hello, World!")
-        }
+import XCTest
+@testable import CodableCloudKit
+
+final class CodableCloudKitTests: XCTestCase {
+    func testExample() {
+        // This is an example of a functional test case.
+        // Use XCTAssert and related functions to verify your tests produce the correct
+        // results.
     }
+}
