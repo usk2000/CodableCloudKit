@@ -12,7 +12,7 @@ public protocol CloudKitRecordRepresentable {
 }
 
 public struct CloudKitMetadata: Codable {
-    var data: Data
+    var data: String //base64 encoded
     var type: String
     var identifier: String
     var created: CloudKitMetadataDate?

@@ -33,7 +33,7 @@ extension CKRecord {
     
     func allValues() -> [String: Any] {
         
-        var values: [String: Any] = self.extractMetadata()
+        var values: [String: Any] = ["metadata": self.extractMetadata()]
         
         self.allKeys().forEach { key in
             values[key] = self[key]
@@ -44,7 +44,7 @@ extension CKRecord {
     
     func extractMetadata() -> [String: Any] {
         var metadata: [String: Any] = [
-            "data": encodedData(),
+            "data": encodedData().base64EncodedString(),
             "type": self.recordType,
             "identifier": self.recordID.recordName
         ]

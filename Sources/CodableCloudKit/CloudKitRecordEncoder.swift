@@ -12,7 +12,10 @@ final public class CloudKitRecordEncoder: JSONEncoder {
     
     public func encodeToRecordValues<T>(_ value: T) throws -> CKRecord where T: CloudKitRecordEncodable {
         
-        let unarchiver = try NSKeyedUnarchiver.init(forReadingFrom: value.metadata.data)
+        guard let decodedData = NSData.init(base64Encoded: value.metadata.data, options: []) else {
+            throw NSError.init(domain: "CodableCloudKit", code: 0, userInfo: ["message": "can not get NSData"])
+        }
+        let unarchiver = try NSKeyedUnarchiver.init(forReadingFrom: decodedData as Data)
         unarchiver.requiresSecureCoding = true
         guard let record = CKRecord(coder: unarchiver) else {
             throw NSError.init(domain: "CodableCloudKit", code: 0, userInfo: ["message": "can not extract CKRecord"])
