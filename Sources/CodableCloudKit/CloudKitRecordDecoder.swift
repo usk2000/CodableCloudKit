@@ -8,57 +8,63 @@
 import CloudKit
 import Foundation
 
-final public class CloudKitRecordDecoder: Decoder {
-    public var codingPath: [CodingKey] = []
+final public class CloudKitRecordDecoder: JSONDecoder {
     
-    public var userInfo: [CodingUserInfoKey: Any] = [:]
-    
-    public func container<Key>(keyedBy type: Key.Type) throws -> KeyedDecodingContainer<Key> where Key : CodingKey {
+    public func decode<T>(_ type: T.Type, from record: CKRecord)
+        throws -> T where T: CloudKitRecordDecodable
+    {
+        let values = record.allValues()
+        let data = try JSONSerialization.data(withJSONObject: values, options: [.fragmentsAllowed])
+        return try decode(T.self, from: data)
     }
+
+    public override init() {}
     
-    public func unkeyedContainer() throws -> UnkeyedDecodingContainer {
-        
-    }
-    
-    public func singleValueContainer() throws -> SingleValueDecodingContainer {
-        
-    }
-        
 }
 
-extension CloudKitRecordDecoder {
+extension CKRecord {
     
-    final class KeyedContainer<Key> where Key: CodingKey {
-        var record: CKRecord
-        var codingPath: [CodingKey]
-        var userInfo: [CodingUserInfoKey: Any]
-        let keyOverrides: [String: Any]
-
-        private lazy var systemFieldsData: Data = {
-            return decodeSystemFields()
-        }()
-
-        func nestedCodingPath(forKey key: CodingKey) -> [CodingKey] {
-            return self.codingPath + [key]
+    func encodedData() -> Data {
+        let coder = NSKeyedArchiver.init(requiringSecureCoding: true)
+        self.encodeSystemFields(with: coder)
+        coder.finishEncoding()
+        return coder.encodedData
+    }
+    
+    func allValues() -> [String: Any] {
+        
+        var values: [String: Any] = self.extractMetadata()
+        
+        self.allKeys().forEach { key in
+            values[key] = self[key]
         }
-
-        init(
-            record: CKRecord, codingPath: [CodingKey], userInfo: [CodingUserInfoKey: Any],
-            keyOverrides: [String: Any]
-        ) {
-            self.codingPath = codingPath
-            self.userInfo = userInfo
-            self.record = record
-            self.keyOverrides = keyOverrides
+        
+        return values
+    }
+    
+    func extractMetadata() -> [String: Any] {
+        var metadata: [String: Any] = [
+            "data": encodedData(),
+            "type": self.recordType,
+            "identifier": self.recordID.recordName
+        ]
+        
+        if let date = self.creationDate, let userId = self.creatorUserRecordID?.recordName {
+            metadata["created"] = [
+                "date": date,
+                "user": userId
+            ]
         }
-
-        func checkCanDecodeValue(forKey key: Key) throws {
-            guard self.contains(key) else {
-                let context = DecodingError.Context(
-                    codingPath: self.codingPath, debugDescription: "key not found: \(key)")
-                throw DecodingError.keyNotFound(key, context)
-            }
+        
+        if let date = self.modificationDate, let userId = self.lastModifiedUserRecordID?.recordName {
+            metadata["modified"] = [
+                "date": date,
+                "user": userId
+            ]
         }
+        
+        return metadata
+        
     }
     
 }

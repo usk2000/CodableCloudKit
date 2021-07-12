@@ -7,8 +7,31 @@
 
 import Foundation
 
-public protocol CloudKitCodable: Decodable & Encodable {
-    var cloudKitSystemFields: Data { get }
-    var cloudKitRecordType: String { get }
-    var cloudKitIdentifier: String { get }
+public protocol CloudKitRecordRepresentable {
+    var metadata: CloudKitMetadata { get }
+}
+
+public struct CloudKitMetadata: Codable {
+    var data: Data
+    var type: String
+    var identifier: String
+    var created: CloudKitMetadataDate?
+    var modified: CloudKitMetadataDate?
+}
+
+public struct CloudKitMetadataDate: Codable {
+    var date: Date
+    var user: String
+}
+
+public protocol CloudKitRecordDecodable: CloudKitRecordRepresentable & Decodable {
+    
+}
+
+public protocol CloudKitRecordEncodable: CloudKitRecordRepresentable & Encodable {
+    
+}
+
+public protocol CloudKitCodable: CloudKitRecordDecodable & CloudKitRecordEncodable {
+    
 }
