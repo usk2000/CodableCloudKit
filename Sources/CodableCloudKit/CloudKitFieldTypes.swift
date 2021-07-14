@@ -8,11 +8,15 @@
 import Foundation
 
 @propertyWrapper
-struct CKBool: Codable {
+public struct CKBool: Codable {
     
-    let wrappedValue: Bool
+    public let wrappedValue: Bool
     
-    init(from decoder: Decoder) throws {
+    public init(_ value: Bool) {
+        self.wrappedValue = value
+    }
+    
+    public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
         let intValue = try container.decode(Int.self)
         switch intValue {
@@ -22,7 +26,7 @@ struct CKBool: Codable {
         }
     }
     
-    func encode(to encoder: Encoder) throws {
+    public func encode(to encoder: Encoder) throws {
         var container = encoder.singleValueContainer()
         let value = wrappedValue ? 1 : 0
         try container.encode(value)
