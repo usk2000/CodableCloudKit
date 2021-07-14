@@ -13,4 +13,5 @@ struct SampleModel: CloudKitCodable {
     var metadata: CloudKitMetadata
     let text: String
     let date: Date
+    @CKBool var read: Bool
 }

@@ -13,7 +13,7 @@ final public class CloudKitRecordDecoder: JSONDecoder {
     public func decode<T>(_ type: T.Type, from record: CKRecord)
         throws -> T where T: CloudKitRecordDecodable
     {
-
+        
         let values = replaceAllDate(values: record.allValues())
         
         let data = try JSONSerialization.data(withJSONObject: values, options: [.fragmentsAllowed])
